@@ -14,15 +14,6 @@
         android:layout_gravity="center_horizontal"
         android:paddingBottom="16dp"/>
 
-    <Button
-        android:id="@+id/btnBackToUserList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFavorites"
         android:layout_width="match_parent"

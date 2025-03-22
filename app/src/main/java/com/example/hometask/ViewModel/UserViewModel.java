@@ -1,11 +1,14 @@
 package com.example.hometask.ViewModel;
 
 import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.example.hometask.Models.User;
 import com.example.hometask.Repository.UserRepository;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,32 +20,11 @@ import java.util.Locale;
 public class UserViewModel extends ViewModel {
 
     private final MutableLiveData<List<User>> users = new MutableLiveData<>();
-    private final MutableLiveData<List<User>> favoritesLiveData = new MutableLiveData<>(new ArrayList<>());
     private final UserRepository userRepository;
-
 
     public UserViewModel() {
         userRepository = new UserRepository();
         fetchUsers();  // Initial load of users
-    }
-    public LiveData<List<User>> getFavoritesLiveData() {
-        return favoritesLiveData;
-    }
-
-    public void addToFavorites(User user) {
-        List<User> currentFavorites = new ArrayList<>(favoritesLiveData.getValue());
-        if (currentFavorites.size() < 10 && !currentFavorites.contains(user)) {
-            currentFavorites.add(user);
-            favoritesLiveData.setValue(currentFavorites);
-        }
-    }
-
-    public void removeFromFavorites(User user) {
-        List<User> currentFavorites = new ArrayList<>(favoritesLiveData.getValue());
-        if (currentFavorites.contains(user)) {
-            currentFavorites.remove(user);
-            favoritesLiveData.setValue(currentFavorites);
-        }
     }
 
     // Fetch users and observe changes
@@ -65,8 +47,9 @@ public class UserViewModel extends ViewModel {
         return users;
     }
 
+    // Sorting users by date of birth from youngest to oldest
     public void sortUsersByDateOfBirth() {
-        List<User> usersList = users.getValue(); // Use 'users' instead of 'usersLiveData'
+        List<User> usersList = users.getValue();
         if (usersList != null && !usersList.isEmpty()) {
             Log.d("UserViewModel", "Sorting users by date of birth (youngest to oldest)...");
 
@@ -82,7 +65,8 @@ public class UserViewModel extends ViewModel {
                 }
             });
 
-            users.setValue(new ArrayList<>(usersList)); // Update LiveData with sorted list
+            // Update LiveData with sorted users
+            users.setValue(new ArrayList<>(usersList));
 
             // Log the sorted list for verification
             for (User user : usersList) {
@@ -92,5 +76,4 @@ public class UserViewModel extends ViewModel {
             Log.d("UserViewModel", "User list is null or empty, cannot sort.");
         }
     }
-
 }
