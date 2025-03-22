@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/background_color">
 
     <TextView
         android:layout_width="wrap_content"
@@ -14,28 +15,52 @@
         android:textSize="24sp"
         android:layout_gravity="center_horizontal"
         android:paddingBottom="16dp"
+        android:textColor="@color/primary_text_color"
         tools:ignore="HardcodedText" />
-    <!-- Add the Sort Button -->
-    <Button
-        android:id="@+id/sort_button"
+
+    <!-- Horizontal LinearLayout for Sort and Favorites buttons -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:weightSum="2">
+
+        <!-- Sort Button -->
+        <Button
+            android:id="@+id/sort_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Sort DOB"
+            android:backgroundTint="@color/orange_color"
+            android:textColor="@color/white"/>
+
+        <!-- Go to Favorites Button -->
+        <Button
+            android:id="@+id/btnGoToFavorites"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Favorites"
+            android:layout_marginStart="16dp"
+            android:backgroundTint="@color/orange_color"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+    <!-- ProgressBar (Loading Indicator) -->
+    <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sort by Date of Birth"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/secondary_color"/>
 
-    <Button
-        android:id="@+id/btnGoToFavorites"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Favorites"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+    <!-- RecyclerView for displaying user list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-
-
 </LinearLayout>

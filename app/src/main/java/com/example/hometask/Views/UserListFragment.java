@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hometask.Adapters.UserAdapter;
-import com.example.hometask.Models.User;
 import com.example.hometask.R;
 import com.example.hometask.ViewModel.FavoriteViewModel;
 import com.example.hometask.ViewModel.UserViewModel;
@@ -28,6 +27,8 @@ public class UserListFragment extends Fragment {
     private UserViewModel userViewModel;
     private FavoriteViewModel favoriteViewModel;
     private UserAdapter adapter;
+    private int currentPage = 1; // To track current page for pagination
+    private final int pageSize = 20; // The number of users per page
 
     public UserListFragment() {
         // Required empty public constructor
@@ -71,8 +72,8 @@ public class UserListFragment extends Fragment {
             }
         });
 
-        // Fetch users when fragment is created
-        userViewModel.fetchUsers();
+        // Fetch the first page of users when the fragment is created
+        userViewModel.fetchUsers(currentPage, pageSize);
 
         // Sort Button
         Button btnSort = view.findViewById(R.id.sort_button);
@@ -85,5 +86,26 @@ public class UserListFragment extends Fragment {
         btnGoToFavorites.setOnClickListener(v ->
                 Navigation.findNavController(v).navigate(R.id.action_userListFragment_to_favoriteFragment)
         );
+
+        // Implement pagination by adding a scroll listener
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                // Check if the user has reached the bottom of the list
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null && layoutManager.findLastVisibleItemPosition() == adapter.getItemCount() - 1) {
+                    // Load the next page of users
+                    loadMoreUsers();
+                }
+            }
+        });
+    }
+
+    private void loadMoreUsers() {
+        // Increase the page number and fetch more users
+        currentPage++;
+        userViewModel.fetchUsers(currentPage, pageSize);
     }
 }

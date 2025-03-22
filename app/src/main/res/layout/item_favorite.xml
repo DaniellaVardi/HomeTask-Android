@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/imgAvatar"
@@ -24,26 +25,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="User Name"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/primary_text_color" />
 
         <TextView
             android:id="@+id/txtEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="email@example.com" />
+            android:text="email@example.com"
+            android:textColor="@color/secondary_text_color"/>
 
         <TextView
             android:id="@+id/txtDob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Date of Birth: 01/01/1990"
-            android:textSize="14sp"/>
-
+            android:textSize="14sp"
+            android:textColor="@color/secondary_text_color"/>
     </LinearLayout>
 
     <Button
         android:id="@+id/btnRemove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Remove" />
+        android:text="Remove"
+        android:backgroundTint="@color/error_color"
+        android:textColor="@color/white"/>
 </LinearLayout>

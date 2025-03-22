@@ -20,31 +20,50 @@ import java.util.Locale;
 public class UserViewModel extends ViewModel {
 
     private final MutableLiveData<List<User>> users = new MutableLiveData<>();
+    private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
     private final UserRepository userRepository;
+    private int currentPage = 1;  // Track the current page for loading
+    private final int pageSize = 20; // The number of users per page
+
 
     public UserViewModel() {
         userRepository = new UserRepository();
-        fetchUsers();  // Initial load of users
+        fetchUsers(currentPage,pageSize);  // Initial fetch
     }
 
-    // Fetch users and observe changes
-    public void fetchUsers() {
+    // Fetch users from the repository for the given page
+    public void fetchUsers(int page, int pageSize) {
         userRepository.getUsersLiveData().observeForever(usersList -> {
             if (usersList != null) {
+                if (page == 1) {
+                    // First load
+                    users.postValue(usersList);
+                } else {
+                    // Append the new users to the list
+                    List<User> currentUsers = users.getValue();
+                    if (currentUsers != null) {
+                        currentUsers.addAll(usersList);
+                        users.setValue(currentUsers);
+                    }
+                }
                 Log.d("UserViewModel", "Fetched users: " + usersList.size());
-                users.postValue(usersList);
             } else {
                 Log.d("UserViewModel", "User list is null!");
+                errorMessage.postValue("Failed to fetch users!");
             }
         });
 
-        // Ensure repository fetches users
-        userRepository.fetchUsers();
+        userRepository.fetchUsers(page);  // Pass the page number to repository
     }
 
     // Expose LiveData to the UI
     public LiveData<List<User>> getUsers() {
         return users;
+    }
+
+    // Expose error messages to the UI
+    public LiveData<String> getErrorMessage() {
+        return errorMessage;
     }
 
     // Sorting users by date of birth from youngest to oldest

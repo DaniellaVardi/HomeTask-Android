@@ -1,5 +1,6 @@
 package com.example.hometask.Adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -31,7 +33,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user, parent, false);
-        return new UserViewHolder(view);
+        return new UserViewHolder(view, parent.getContext()); // Pass the context here
     }
 
     @Override
@@ -55,9 +57,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         TextView txtName, txtEmail, txtDob;
         ImageView imgAvatar;
         Button btnFavorite;
+        private Context context;
 
-        UserViewHolder(View itemView) {
+        UserViewHolder(View itemView, Context context) {
             super(itemView);
+            this.context = context; // Save the context here
+
             txtName = itemView.findViewById(R.id.txtName);
             txtEmail = itemView.findViewById(R.id.txtEmail);
             txtDob = itemView.findViewById(R.id.txtDob);
@@ -83,15 +88,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                     .load(user.getAvatar())
                     .into(imgAvatar);
 
-            // Observe favorite status
-            favoriteViewModel.getFavoritesLiveData().observeForever(favorites -> {
-                // Update button text and color based on if the user is in the favorites list
+            // Observe LiveData on the main thread
+            favoriteViewModel.getFavoritesLiveData().observe((LifecycleOwner) context, favorites -> {
+                // Perform UI updates only on the main thread
                 if (favoriteViewModel.isUserFavorite(user)) {
                     btnFavorite.setText("UNFAVORITE");
-                    btnFavorite.setBackgroundColor(itemView.getContext().getResources().getColor(android.R.color.holo_red_dark));
+                    btnFavorite.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.primary_color));
                 } else {
                     btnFavorite.setText("Favorite");
-                    btnFavorite.setBackgroundColor(itemView.getContext().getResources().getColor(android.R.color.holo_green_dark));
+                    btnFavorite.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.secondary_color));
                 }
             });
         }
