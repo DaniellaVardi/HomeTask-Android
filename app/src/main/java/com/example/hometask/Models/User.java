@@ -8,10 +8,28 @@ public class User {
     private String email;
     private String date_of_birth;
 
-    public int getId() { return id; }
-    public String getAvatar() { return avatar; }
-    public String getFirst_name() { return first_name; }
-    public String getLast_name() { return last_name; }
-    public String getEmail() { return email; }
-    public String getDate_of_birth() { return date_of_birth; }
+    public int getId() {
+        return id;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    public String getLast_name() {
+        return last_name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    // Updated the method name to getDob()
+    public String getDob() {
+        return date_of_birth;
+    }
 }

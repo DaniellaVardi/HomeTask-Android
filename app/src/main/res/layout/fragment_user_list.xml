@@ -15,6 +15,13 @@
         android:layout_gravity="center_horizontal"
         android:paddingBottom="16dp"
         tools:ignore="HardcodedText" />
+    <!-- Add the Sort Button -->
+    <Button
+        android:id="@+id/sort_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort by Date of Birth"
+        android:layout_gravity="center"/>
 
     <Button
         android:id="@+id/btnGoToFavorites"

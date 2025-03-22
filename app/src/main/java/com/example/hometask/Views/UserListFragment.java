@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,10 +13,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.hometask.Adapters.UserAdapter;
+import com.example.hometask.Models.User;
 import com.example.hometask.R;
 import com.example.hometask.ViewModel.UserViewModel;
+import java.util.List;
 
 public class UserListFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -33,21 +33,29 @@ public class UserListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         viewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        // Observe data from ViewModel
+        // Initialize adapter with empty list
+        adapter = new UserAdapter(user -> viewModel.addToFavorites(user));
+        recyclerView.setAdapter(adapter);
+
+        // Observe LiveData and update adapter
         viewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-            if (users != null && !users.isEmpty()) {
-                adapter = new UserAdapter(users, user -> {
-                    viewModel.addToFavorites(user);
-                });
-                recyclerView.setAdapter(adapter);
+            if (users != null) {
+                adapter.updateList(users);
             } else {
                 Log.d("UserListFragment", "No users received!");
             }
+        });
+
+        // Sort Button
+        Button btnSort = view.findViewById(R.id.sort_button);
+        btnSort.setOnClickListener(v -> {
+            viewModel.sortUsersByDateOfBirth();
         });
 
         // Button to navigate to FavoritesFragment
